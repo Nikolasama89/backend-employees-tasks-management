@@ -10,6 +10,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -48,4 +49,9 @@ public class Employee extends AbstractEntity {
 
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Task> tasks = new ArrayList<>();
+
+    @PrePersist     // ΚΑΘΕ ΦΟΡΑ ΠΟΥ ΘΑ ΠΑΕΙ ΝΑ ΚΑΝΕΙ SAVE ΘΑ ΕΛΕΓΧΕΙ ΤΟ UUID ΑΝ ΕΙΝΑΙ NULL. ΑΝ ΕΙΝΑΙ ΘΑ ΤΟΥ ΔΙΝΕΙ ΕΝΑ
+    public void initializeUUID(){
+        if (uuid == null) uuid = UUID.randomUUID().toString();
+    }
 }
