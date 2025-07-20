@@ -22,6 +22,7 @@ public class Employee extends AbstractEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
     private Long id;
 
     @Column(unique = true)
@@ -32,6 +33,7 @@ public class Employee extends AbstractEntity {
 
     private String firstname;
     private String lastname;
+    private String phone;
 
     @ManyToOne
     @JoinColumn(name = "region_id")
