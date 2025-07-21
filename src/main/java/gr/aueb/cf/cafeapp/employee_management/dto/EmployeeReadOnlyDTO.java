@@ -21,6 +21,7 @@ public class EmployeeReadOnlyDTO {
     private String lastname;
     private String vat;
     private String region;
+    private String phone;
     private Long regionId;
     private String email;
     private Long userId;

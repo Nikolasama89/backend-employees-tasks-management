@@ -26,6 +26,9 @@ public class EmployeeInsertDTO {
     @Pattern(regexp = "\\d{9}", message = "Vat must be exactly 9 digits.")
     private String vat;
 
+    @Pattern(regexp = "\\d{10}", message = "Phone must be exactly 9 digits.")
+    private String phone;
+
     @Pattern(regexp = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$", message = "Invalid email format")
     private String email;
 

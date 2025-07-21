@@ -29,6 +29,9 @@ public class EmployeeUpdateDTO {
     @Pattern(regexp = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$", message = "Invalid email format")
     private String email;
 
+    @Pattern(regexp = "\\d{10}", message = "Phone must be exactly 10 digits.")
+    private String phone;
+
     @NotNull(message = "Ο τίτλος δεν μπορεί να μην υπάρχει.")
     private JobTitle jobTitle;
 
