@@ -17,6 +17,7 @@ public class Mapper {
         employee.setLastname(employeeInsertDTO.getLastname());
         employee.setVat(employeeInsertDTO.getVat());
         employee.setEmail(employeeInsertDTO.getEmail());
+        employee.setPhone(employeeInsertDTO.getPhone());
         employee.setJobTitle(employeeInsertDTO.getJobTitle());
         employee.setRegion(region);
         employee.setUserId(user);
@@ -29,6 +30,7 @@ public class Mapper {
                 employee.getUuid(),
                 employee.getFirstname(),
                 employee.getLastname(),
+                employee.getPhone(),
                 employee.getVat(),
                 employee.getEmail(),
                 employee.getRegion().getId(),
@@ -41,6 +43,7 @@ public class Mapper {
         employee.setFirstname(updateDTO.getFirstname());
         employee.setLastname(updateDTO.getLastname());
         employee.setEmail(updateDTO.getEmail());
+        employee.setPhone(updateDTO.getPhone());
         employee.setJobTitle(updateDTO.getJobTitle());
         employee.setRegion(region);
     }
