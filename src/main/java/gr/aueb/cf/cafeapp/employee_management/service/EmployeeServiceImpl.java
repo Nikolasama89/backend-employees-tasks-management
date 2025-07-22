@@ -15,6 +15,9 @@ import gr.aueb.cf.cafeapp.employee_management.repository.RegionRepository;
 import gr.aueb.cf.cafeapp.employee_management.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,32 +68,76 @@ public class EmployeeServiceImpl implements IEmployeeService{
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public EmployeeReadOnlyDTO updateEmployee(EmployeeUpdateDTO updateDTO) throws EntityNotFoundException, EntityInvalidArgumentException {
-        return null;
+
+        try {
+            Employee employee = employeeRepository.findById(updateDTO.getId())
+                    .orElseThrow(() -> new EntityNotFoundException("Employee", "Employee with id " + updateDTO.getId() + " not found"));
+
+            Region region = regionRepository.findById(updateDTO.getRegionId())
+                    .orElseThrow(() -> new EntityInvalidArgumentException("Region", "Region with id " + updateDTO.getRegionId() + " not found"));
+
+            mapper.updateEmployeeFromDTO(updateDTO, employee, region);
+
+            Employee updatedEmployee = employeeRepository.save(employee);
+            return mapper.mapToEmployeeReadOnlyDTO(updatedEmployee);
+        } catch (EntityNotFoundException | EntityInvalidArgumentException e) {
+            log.error("Update failed for employee id={}. Reason: {}", updateDTO.getId(), e.getMessage());
+            throw e;
+        }
     }
 
     @Override
-    public void deleteEmployee(Object id) throws EntityNotFoundException {
-
+    @Transactional
+    public void deleteEmployee(Long id) throws EntityNotFoundException {
+        try {
+            Employee employee = employeeRepository.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException("Employee", "Employee with id: " + id + " not found"));
+            employeeRepository.delete(employee);
+            log.info("Employee with id={} deleted", id);
+        } catch (EntityNotFoundException e) {
+            log.error("Couldn't deleted Employee with id={}. Entity not found.", id, e);
+            throw e;
+        }
     }
 
     @Override
-    public EmployeeReadOnlyDTO getEmployeeById(Object id) throws EntityNotFoundException {
-        return null;
+    public EmployeeReadOnlyDTO getEmployeeById(Long id) throws EntityNotFoundException {
+        try {
+            EmployeeReadOnlyDTO employeeReadOnlyDTO = employeeRepository.findById(id)
+                    .map(mapper::mapToEmployeeReadOnlyDTO)
+                    .orElseThrow(() -> new EntityNotFoundException("Employee", "Employee with id: " + id + " not found"));
+            return employeeReadOnlyDTO;
+        } catch (EntityNotFoundException e) {
+            log.warn("Employee with id={} was not found", id, e);
+            throw e;
+        }
     }
 
     @Override
     public List<EmployeeReadOnlyDTO> getAllEmployees() {
-        return List.of();
+            List<EmployeeReadOnlyDTO> readOnlyDTOS = employeeRepository.findAll()
+                    .stream()
+                    .map(mapper::mapToEmployeeReadOnlyDTO)
+                    .toList();
+            return readOnlyDTOS;
     }
 
     @Override
-    public List<EmployeeReadOnlyDTO> getEmployeesByCriteria(Map<String, Object> criteria) {
-        return List.of();
+    public Page<EmployeeReadOnlyDTO> getAllEmployeesPaginated(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return employeeRepository.findAll(pageable)
+                .map(mapper::mapToEmployeeReadOnlyDTO);
     }
 
-    @Override
-    public List<EmployeeReadOnlyDTO> getEmployeesByCriteriaPaginated(Map<String, Object> criteria, Integer page, Integer size) {
-        return List.of();
-    }
+    //    @Override
+//    public List<EmployeeReadOnlyDTO> getEmployeesByCriteria(Map<String, Object> criteria) {
+//        List<EmployeeReadOnlyDTO> readOnlyDTOS = employeeRepository.
+//    }
+
+//    @Override
+//    public List<EmployeeReadOnlyDTO> getEmployeesByCriteriaPaginated(Map<String, Object> criteria, Integer page, Integer size) {
+//        return List.of();
+//    }
 }
