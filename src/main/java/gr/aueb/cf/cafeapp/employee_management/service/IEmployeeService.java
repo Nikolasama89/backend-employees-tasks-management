@@ -17,9 +17,9 @@ public interface IEmployeeService {
     EmployeeReadOnlyDTO updateEmployee(EmployeeUpdateDTO updateDTO)
             throws EntityNotFoundException, EntityInvalidArgumentException;
 
-    void deleteEmployee(Object id) throws EntityNotFoundException;
+    void deleteEmployee(Long id) throws EntityNotFoundException;
 
-    EmployeeReadOnlyDTO getEmployeeById(Object id) throws EntityNotFoundException;
+    EmployeeReadOnlyDTO getEmployeeById(Long id) throws EntityNotFoundException;
 
     List<EmployeeReadOnlyDTO> getAllEmployees();
 
