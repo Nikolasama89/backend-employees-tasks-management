@@ -6,6 +6,9 @@ import gr.aueb.cf.cafeapp.employee_management.core.exceptions.EntityNotFoundExce
 import gr.aueb.cf.cafeapp.employee_management.dto.EmployeeInsertDTO;
 import gr.aueb.cf.cafeapp.employee_management.dto.EmployeeReadOnlyDTO;
 import gr.aueb.cf.cafeapp.employee_management.dto.EmployeeUpdateDTO;
+import gr.aueb.cf.cafeapp.employee_management.model.Employee;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Map;
@@ -23,9 +26,11 @@ public interface IEmployeeService {
 
     List<EmployeeReadOnlyDTO> getAllEmployees();
 
+    Page<EmployeeReadOnlyDTO> getAllEmployeesPaginated(int page, int size);
+
 //    long getEmployeesCountByCriteria(Map<String, Object> criteria);
 
-    List<EmployeeReadOnlyDTO> getEmployeesByCriteria(Map<String, Object> criteria);
+//    List<EmployeeReadOnlyDTO> getEmployeesByCriteria(Map<String, Object> criteria);
 
-    List<EmployeeReadOnlyDTO> getEmployeesByCriteriaPaginated(Map<String, Object> criteria, Integer page, Integer size);
+//    List<EmployeeReadOnlyDTO> getEmployeesByCriteriaPaginated(Map<String, Object> criteria, Integer page, Integer size);
 }
