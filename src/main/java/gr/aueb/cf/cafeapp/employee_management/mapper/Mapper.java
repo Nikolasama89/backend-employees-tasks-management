@@ -1,8 +1,7 @@
 package gr.aueb.cf.cafeapp.employee_management.mapper;
 
-import gr.aueb.cf.cafeapp.employee_management.dto.EmployeeInsertDTO;
-import gr.aueb.cf.cafeapp.employee_management.dto.EmployeeReadOnlyDTO;
-import gr.aueb.cf.cafeapp.employee_management.dto.EmployeeUpdateDTO;
+import gr.aueb.cf.cafeapp.employee_management.core.enums.Role;
+import gr.aueb.cf.cafeapp.employee_management.dto.*;
 import gr.aueb.cf.cafeapp.employee_management.model.Employee;
 import gr.aueb.cf.cafeapp.employee_management.model.User;
 import gr.aueb.cf.cafeapp.employee_management.model.static_data.Region;
@@ -46,6 +45,14 @@ public class Mapper {
         employee.setPhone(updateDTO.getPhone());
         employee.setJobTitle(updateDTO.getJobTitle());
         employee.setRegion(region);
+    }
+
+    public User mapToUserEntity(UserInsertDTO userInsertDTO) {
+        return new User(null, userInsertDTO.getUsername(), userInsertDTO.getPassword(), userInsertDTO.getRole());
+    }
+
+    public UserReadOnlyDTO mapUserToReadOnlyDTO(User user) {
+        return new UserReadOnlyDTO(user.getUsername(), user.getRole().name());
     }
 
 }
