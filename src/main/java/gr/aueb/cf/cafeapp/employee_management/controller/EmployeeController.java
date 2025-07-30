@@ -37,7 +37,7 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<EmployeeReadOnlyDTO> deleteEmployee(@PathVariable Long id) throws EntityNotFoundException {
+    public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) throws EntityNotFoundException {
         employeeService.deleteEmployee(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
