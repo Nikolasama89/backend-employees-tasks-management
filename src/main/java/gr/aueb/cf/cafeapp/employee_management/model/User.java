@@ -36,7 +36,8 @@ public class User extends AbstractEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        // ΤΟ SPRING ΨΑΧΝΕΙ PREFIX "ROLE_" KAI ΕΤΣΙ ΔΙΑΣΦΑΛΙΖΟΥΜΕ ΟΤΙ ΟΙ ΡΟΛΟΙ ΜΑΣ ΑΠΟΘΗΚΕΥΟΝΤΑΙ ΩΣ "ROLE_ADMIN" ΠΧ.
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
 
     @Override
