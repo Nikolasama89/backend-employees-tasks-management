@@ -29,11 +29,11 @@ public class Mapper {
                 employee.getUuid(),
                 employee.getFirstname(),
                 employee.getLastname(),
-                employee.getPhone(),
                 employee.getVat(),
-                employee.getEmail(),
-                employee.getRegion().getId(),
+                employee.getPhone(),
                 employee.getRegion().getName(),
+                employee.getRegion().getId(),
+                employee.getEmail(),
                 employee.getUserId().getId(),
                 employee.getJobTitle());
     }
