@@ -11,6 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 
+import java.security.Principal;
 import java.util.Collection;
 import java.util.List;
 
@@ -20,14 +21,15 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "users")
-public class User extends AbstractEntity implements UserDetails {
+public class User extends AbstractEntity implements UserDetails, IdentifiableEntity, Principal {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
+    @Column(unique = true, nullable = false)
     private String username;
+
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -69,4 +71,10 @@ public class User extends AbstractEntity implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    @Override
+    public String getName() {
+        return username;
+    }
+
 }
