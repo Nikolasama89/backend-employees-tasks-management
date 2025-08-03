@@ -1,5 +1,6 @@
 package gr.aueb.cf.cafeapp.employee_management.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,9 +13,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AuthenticationRequestDTO {
 
-    @NotNull
+    @NotBlank(message = "Username cannot be blank")
     private String username;
 
-    @NotNull
+    @NotBlank(message = "Password cannot be blank")
     private String password;
 }
