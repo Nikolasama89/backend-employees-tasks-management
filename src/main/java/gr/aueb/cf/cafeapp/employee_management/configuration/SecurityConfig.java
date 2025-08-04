@@ -1,17 +1,15 @@
 package gr.aueb.cf.cafeapp.employee_management.configuration;
 
-import gr.aueb.cf.cafeapp.employee_management.authentication.AuthenticationService;
 import gr.aueb.cf.cafeapp.employee_management.authentication.JwtAuthenticationFilter;
 import gr.aueb.cf.cafeapp.employee_management.core.enums.Role;
 import gr.aueb.cf.cafeapp.employee_management.model.User;
 import gr.aueb.cf.cafeapp.employee_management.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
+import gr.aueb.cf.cafeapp.employee_management.security.JwtService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -24,11 +22,12 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-@RequiredArgsConstructor
 public class SecurityConfig {
-    private final JwtAuthenticationFilter jwtAuthFilter;
-    private final AuthenticationService authService;
 
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter(JwtService jwtService, UserDetailsService userDetailsService) {
+        return new JwtAuthenticationFilter(jwtService, userDetailsService);
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -44,7 +43,7 @@ public class SecurityConfig {
 
     // DISABLING AUTH FOR TESTING ENDPOINTS
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthFilter) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sm -> sm
