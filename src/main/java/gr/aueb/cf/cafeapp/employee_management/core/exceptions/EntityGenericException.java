@@ -3,7 +3,7 @@ package gr.aueb.cf.cafeapp.employee_management.core.exceptions;
 import lombok.Getter;
 
 @Getter
-public abstract class EntityGenericException extends Exception {
+public abstract class EntityGenericException extends RuntimeException {
 
     private final String code;
 
@@ -11,4 +11,5 @@ public abstract class EntityGenericException extends Exception {
         super(message);
         this.code = code;
     }
+
 }
