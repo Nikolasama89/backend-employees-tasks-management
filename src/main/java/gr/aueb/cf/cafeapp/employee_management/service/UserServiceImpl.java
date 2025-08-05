@@ -32,7 +32,7 @@ public class UserServiceImpl implements IUserService{
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public UserReadOnlyDTO insertUser(UserInsertDTO insertDTO) throws EntityAlreadyExistsException, EntityInvalidArgumentException {
+    public UserReadOnlyDTO insertUser(UserInsertDTO insertDTO) {
 
         if (insertDTO == null) {
             throw new EntityInvalidArgumentException("User", "InsertDTO cannot be null");
@@ -74,7 +74,7 @@ public class UserServiceImpl implements IUserService{
 
     @Override
     @Transactional(readOnly = true)
-    public UserReadOnlyDTO getUserByUsername(String username) throws EntityNotFoundException {
+    public UserReadOnlyDTO getUserByUsername(String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException("User", "User with username: " + username + " not found."));
         return mapper.mapUserToReadOnlyDTO(user);
@@ -82,7 +82,7 @@ public class UserServiceImpl implements IUserService{
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void deleteUser(Long id) throws EntityNotFoundException {
+    public void deleteUser(Long id){
         User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User", "User not found"));
         userRepository.delete(user);
         log.info("Deleted user with id={}", id);

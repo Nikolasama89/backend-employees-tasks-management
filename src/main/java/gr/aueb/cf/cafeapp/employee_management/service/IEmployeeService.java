@@ -14,15 +14,13 @@ import java.util.List;
 import java.util.Map;
 
 public interface IEmployeeService {
-    EmployeeReadOnlyDTO insertEmployee(EmployeeInsertDTO insertDTO)
-            throws EntityAlreadyExistsException, EntityInvalidArgumentException;
+    EmployeeReadOnlyDTO insertEmployee(EmployeeInsertDTO insertDTO);
 
-    EmployeeReadOnlyDTO updateEmployee(EmployeeUpdateDTO updateDTO)
-            throws EntityNotFoundException, EntityInvalidArgumentException;
+    EmployeeReadOnlyDTO updateEmployee(EmployeeUpdateDTO updateDTO);
 
-    void deleteEmployee(Long id) throws EntityNotFoundException;
+    void deleteEmployee(Long id);
 
-    EmployeeReadOnlyDTO getEmployeeById(Long id) throws EntityNotFoundException;
+    EmployeeReadOnlyDTO getEmployeeById(Long id);
 
     List<EmployeeReadOnlyDTO> getAllEmployees();
 

@@ -10,12 +10,12 @@ import java.util.List;
 
 public interface IUserService {
 
-    UserReadOnlyDTO insertUser(UserInsertDTO insertDTO) throws EntityAlreadyExistsException, EntityInvalidArgumentException;
+    UserReadOnlyDTO insertUser(UserInsertDTO insertDTO);
 
     List<UserReadOnlyDTO> getAllUsers();
 
-    UserReadOnlyDTO getUserByUsername(String username) throws EntityNotFoundException;
+    UserReadOnlyDTO getUserByUsername(String username) ;
 
-    void deleteUser(Long id) throws EntityNotFoundException;
+    void deleteUser(Long id);
 
 }

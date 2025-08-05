@@ -46,8 +46,8 @@ public class EmployeeServiceImpl implements IEmployeeService{
     @Transactional(rollbackFor = Exception.class)
     public EmployeeReadOnlyDTO insertEmployee(EmployeeInsertDTO insertDTO) throws EntityAlreadyExistsException, EntityInvalidArgumentException {
 
-        try {
             if (employeeRepository.findByVat(insertDTO.getVat()).isPresent()) {
+                log.warn("Insert failed: duplicate VAT {}", insertDTO.getVat());
                 throw new EntityAlreadyExistsException("Employee", "Employee with vat " + insertDTO.getVat() + " already exists.");
             }
 
@@ -61,17 +61,12 @@ public class EmployeeServiceImpl implements IEmployeeService{
             Employee savedEmployee = employeeRepository.save(employee);
 
             return mapper.mapToEmployeeReadOnlyDTO(savedEmployee);
-        } catch (EntityInvalidArgumentException e) {
-            log.error("Insert failed for employee with vat={}. Reason: {}", insertDTO.getVat(), e.getMessage());
-            throw e;
-        }
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public EmployeeReadOnlyDTO updateEmployee(EmployeeUpdateDTO updateDTO) throws EntityNotFoundException, EntityInvalidArgumentException {
+    public EmployeeReadOnlyDTO updateEmployee(EmployeeUpdateDTO updateDTO) {
 
-        try {
             Employee employee = employeeRepository.findById(updateDTO.getId())
                     .orElseThrow(() -> new EntityNotFoundException("Employee", "Employee with id " + updateDTO.getId() + " not found"));
 
@@ -82,37 +77,26 @@ public class EmployeeServiceImpl implements IEmployeeService{
 
             Employee updatedEmployee = employeeRepository.save(employee);
             return mapper.mapToEmployeeReadOnlyDTO(updatedEmployee);
-        } catch (EntityNotFoundException | EntityInvalidArgumentException e) {
-            log.error("Update failed for employee id={}. Reason: {}", updateDTO.getId(), e.getMessage());
-            throw e;
-        }
+
     }
 
     @Override
     @Transactional
-    public void deleteEmployee(Long id) throws EntityNotFoundException {
-        try {
+    public void deleteEmployee(Long id) {
+
             Employee employee = employeeRepository.findById(id)
                     .orElseThrow(() -> new EntityNotFoundException("Employee", "Employee with id: " + id + " not found"));
             employeeRepository.delete(employee);
             log.info("Employee with id={} deleted", id);
-        } catch (EntityNotFoundException e) {
-            log.error("Couldn't deleted Employee with id={}. Entity not found.", id, e);
-            throw e;
-        }
     }
 
     @Override
-    public EmployeeReadOnlyDTO getEmployeeById(Long id) throws EntityNotFoundException {
-        try {
-            EmployeeReadOnlyDTO employeeReadOnlyDTO = employeeRepository.findById(id)
-                    .map(mapper::mapToEmployeeReadOnlyDTO)
-                    .orElseThrow(() -> new EntityNotFoundException("Employee", "Employee with id: " + id + " not found"));
-            return employeeReadOnlyDTO;
-        } catch (EntityNotFoundException e) {
-            log.warn("Employee with id={} was not found", id, e);
-            throw e;
-        }
+    public EmployeeReadOnlyDTO getEmployeeById(Long id){
+        return employeeRepository.findById(id)
+                .map(mapper::mapToEmployeeReadOnlyDTO)
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Employee", "Employee with id: " + id + " not found")
+                );
     }
 
     @Override
