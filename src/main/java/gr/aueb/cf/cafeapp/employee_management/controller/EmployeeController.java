@@ -10,6 +10,7 @@ import gr.aueb.cf.cafeapp.employee_management.service.IEmployeeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,6 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/employees")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class EmployeeController {
 
     private final IEmployeeService employeeService;
