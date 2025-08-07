@@ -3,7 +3,6 @@ package gr.aueb.cf.cafeapp.employee_management.controller;
 import gr.aueb.cf.cafeapp.employee_management.core.exceptions.EntityAlreadyExistsException;
 import gr.aueb.cf.cafeapp.employee_management.core.exceptions.EntityInvalidArgumentException;
 import gr.aueb.cf.cafeapp.employee_management.core.exceptions.EntityNotFoundException;
-import gr.aueb.cf.cafeapp.employee_management.dto.EmployeeReadOnlyDTO;
 import gr.aueb.cf.cafeapp.employee_management.dto.UserInsertDTO;
 import gr.aueb.cf.cafeapp.employee_management.dto.UserReadOnlyDTO;
 import gr.aueb.cf.cafeapp.employee_management.service.IUserService;
