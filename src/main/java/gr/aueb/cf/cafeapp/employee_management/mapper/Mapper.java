@@ -52,7 +52,7 @@ public class Mapper {
     }
 
     public UserReadOnlyDTO mapUserToReadOnlyDTO(User user) {
-        return new UserReadOnlyDTO(user.getUsername(), user.getRole().name());
+        return new UserReadOnlyDTO(user.getId(), user.getUsername(), user.getRole().name());
     }
 
 }
