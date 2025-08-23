@@ -25,6 +25,7 @@ public class Region {
     // ΣΥΝΔΕΟΥΜΕ ΜΕ ΤΟΥΣ TEACHERS ME SET ΠΟΥ ΕΧΟΥΝ ΠΟΛΥ ΚΑΛΟΥΣ ΧΡΟΝΟΥΣ ΑΝΑΖΗΤΗΣΗΣ
     @Getter(AccessLevel.PUBLIC)
     @OneToMany(mappedBy = "region") // ΕΔΩ ΠΑΙΡΝΕΙ ΤΟ ΟΝΟΜΑ ΑΠΟ ΤΟ ENTITY ΠΟΥ ΕΙΜΑΣΤΕ ΔΛΔ REGION
+    @com.fasterxml.jackson.annotation.JsonIgnore // ΓΙΑ ΝΑ ΚΟΠΕΙ Ο ΚΥΚΛΟΣ ΤΗΣ ΚΥΚΛΙΚΗΣ ΑΝΑΦΟΡΑΣ
     private Set<Employee> employees = new HashSet<>();    // ΑΝ ΔΕΝ ΚΑΝΟΥΜΕ HASHSET TO HIBERNATE ΚΑΝΕΙ ΑΠΟ ΜΟΝΟ ΤΟΥ ΚΑΙ ΔΕΝ ΕΙΝΑΙ HASHSET
 
 
