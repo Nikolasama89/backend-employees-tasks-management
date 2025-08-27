@@ -41,6 +41,7 @@ public class Mapper {
     public void updateEmployeeFromDTO(EmployeeUpdateDTO updateDTO, Employee employee, Region region) {
         employee.setFirstname(updateDTO.getFirstname());
         employee.setLastname(updateDTO.getLastname());
+        employee.setVat(updateDTO.getVat());
         employee.setEmail(updateDTO.getEmail());
         employee.setPhone(updateDTO.getPhone());
         employee.setJobTitle(updateDTO.getJobTitle());

@@ -15,7 +15,6 @@ import lombok.Setter;
 @Setter
 public class EmployeeUpdateDTO {
 
-    @NotNull(message = "Ο κωδικός δεν μπορεί να μην υπάρχει.")
     private Long id;
 
     @NotNull(message = "Το όνομα δεν μπορεί να μην υπάρχει.")
@@ -25,6 +24,9 @@ public class EmployeeUpdateDTO {
     @NotNull(message = "Το επώνυμο δεν μπορεί να μην υπάρχει.")
     @Size(min = 2, max = 255, message = "Το επώνυμο πρέπει να είναι μεταξύ 2-255 χαρακτήρων.")
     private String lastname;
+
+    @Pattern(regexp = "\\d{9}", message = "VAT must be exactly 9 digits.")
+    private String vat;
 
     @Pattern(regexp = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$", message = "Invalid email format")
     private String email;
