@@ -73,7 +73,7 @@ public class EmployeeServiceImplTest {
     // insert success scenario
     @Test
     void insertEmployeeSuccess() throws Exception {
-        // ΣΤΗΝΟΥΜΕ ΤΑ stubs για το σεναριο του insert
+        // ΣΤΗΝΟΥΜΕ ΤΑ stubs(ΡΥΘΜΙΣΗ ΣΥΜΠΕΡΙΦΟΡΑΣ) για το σεναριο του insert
         var dto = insertDTO();
         var region = new Region();
         var user = new User();
@@ -81,6 +81,7 @@ public class EmployeeServiceImplTest {
         var saved = new Employee();
         var read = new EmployeeReadOnlyDTO();
 
+        // STUBS
         when(employeeRepository.findByVat("123456789")).thenReturn(Optional.empty());
         when(regionRepository.findById(10L)).thenReturn(Optional.of(region));
         when(userRepository.findById(100L)).thenReturn(Optional.of(user));
