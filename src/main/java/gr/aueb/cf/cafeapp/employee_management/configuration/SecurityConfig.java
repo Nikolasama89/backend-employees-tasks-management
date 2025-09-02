@@ -29,34 +29,63 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
+/**
+ * Κεντρική ρύθμιση ασφάλειας για την εφαρμογή.
+ *
+ * Stateless security με JWT (χωρίς server-side sessions).
+ * CORS επιτρέπεται από το frontend (localhost:4200).
+ * Συγκεκριμένα endpoints είναι public (auth, swagger).
+ * Όλα τα υπόλοιπα απαιτούν αυθεντικοποίηση και role-based έλεγχο.
+ */
+
 @Configuration
 public class SecurityConfig {
 
+    /**
+     * Bean του JWT φίλτρου μας ώστε να μπορεί να ενσωματωθεί στο security chain.
+     */
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter(JwtService jwtService, UserDetailsService userDetailsService) {
         return new JwtAuthenticationFilter(jwtService, userDetailsService);
     }
 
+    /**
+     * Password encoder: BCrypt (ασφαλής, με salt + cost factor).
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // ΓΙΑ ΝΑ ΠΑΙΡΝΕΙ ΤΟΝ ΑΡΧΙΚΟ ΜΑ
+    /**
+     * UserDetailsService: βρίσκει χρήστες από τη βάση μέσω του repo
+     * Απαραίτητο για το authentication flow του Spring Security
+     */
     @Bean
     public UserDetailsService userDetailsService(UserRepository repo) {
         return username -> repo.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User " + username + " not found"));
     }
 
-    // DISABLING AUTH FOR TESTING ENDPOINTS
+    /**
+     * Κύρια αλυσίδα φίλτρων (SecurityFilterChain).
+     *
+     * - CORS on
+     * - CSRF off (γιατί είμαστε stateless/JWT)
+     * - Authorization κανόνες ανά endpoint/method
+     * - Ενσωμάτωση του JWT φίλτρου πριν το UsernamePasswordAuthenticationFilter
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthFilter) throws Exception {
         http
+                // ΕΠΙΤΡΕΠΕΙ CORS
                 .cors(Customizer.withDefaults())
+                // ME JWT ΔΕΝ ΚΡΑΤΑΜΕ CSRF TOKENS(ΔΕΝ ΕΧΟΥΜΕ SERVER SESSION)
                 .csrf(AbstractHttpConfigurer::disable)
+                // ΚΑΝΕΝΑ HTTP SESSION- ΚΑΘΕ REQUEST ΑΠΟΔΕΙΚΝΥΕΙ ΠΟΙΟΣ ΕΙΝΑΙ ΜΕ ΤΟ JWT
                 .sessionManagement(sm -> sm
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                // AUTH RULES
                 .authorizeHttpRequests(auth -> auth
                         // public auth endpoint
                         .requestMatchers("/api/auth/**").permitAll()
@@ -77,9 +106,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/employees/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/employees/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/employees/**").hasAnyRole("ADMIN", "EMPLOYEE")
+                        // ΟΤΙ ΑΛΛΟ ΔΕΝ ΟΟΡΙΣΤΗΚΕ ΘΕΛΕΙ AUTHENTICATION
                         .anyRequest().authenticated()
                 )
 //                .httpBasic(Customizer.withDefaults())
+                // ΒΑΖΟΥΜΕ JWT ΦΙΛΤΡΟ ΠΡΙΝ ΤΟ DEFAULT USERNAME/PASSWORD
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
@@ -98,36 +129,36 @@ public class SecurityConfig {
         };
     }
 
-    // ΔΗΜΙΟΥΡΓΟΥΜΕ ΤΟ BEAN ΓΙΑ ΝΑ ΕΧΟΥΜΕ ΠΡΟΣΒΑΣΗ ΣΤΟ ΕΙΔΙΚΟ SPRING-ΕΡΓΑΛΕΙΟ ΕΛΕΓΧΟΥ ΤΑΥΤΟΤΗΤΑΣ ΜΕΣΑ ΣΤΙΣ ΚΛΑΣΕΙΣ ΜΑΣ.
+    /**
+     * Παρέχει το AuthenticationManager του Spring χρειάζεται στην AuthenticationService
+     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 
     // CORS CONFIGURATION
-    @Bean
-    public WebMvcConfigurer corsConfig() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")  // ΕΠΙΤΡΕΠΕΙ CORS ΣΕ ΟΛΑ ΤΑ ENDPOINTS
-                        .allowedOrigins("http://localhost:4200")    // ANGULAR
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")    // METHODS
-                        .allowedHeaders("*")    // ALLOWS ALL HEADERS(NEEDS FOR AUTHORIZATION)
-                        .allowCredentials(true);    // ALLOWS COOKIES/AUTH HEADERS(JWT)
-            }
-        };
-    }
+//    @Bean
+//    public WebMvcConfigurer corsConfig() {
+//        return new WebMvcConfigurer() {
+//            @Override
+//            public void addCorsMappings(CorsRegistry registry) {
+//                registry.addMapping("/**")  // ΕΠΙΤΡΕΠΕΙ CORS ΣΕ ΟΛΑ ΤΑ ENDPOINTS
+//                        .allowedOrigins("http://localhost:4200")    // ANGULAR
+//                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")    // METHODS
+//                        .allowedHeaders("*")    // ALLOWS ALL HEADERS(NEEDS FOR AUTHORIZATION)
+//                        .allowCredentials(true);    // ALLOWS COOKIES/AUTH HEADERS(JWT)
+//            }
+//        };
+//    }
 
+    // CORS CONFIGURATION
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        // Βάλε ακριβές origin όταν έχεις credentials:
         config.setAllowedOrigins(List.of("http://localhost:4200"));
         config.setAllowedMethods(List.of("GET","POST","PUT","PATCH","DELETE","OPTIONS"));
         config.setAllowedHeaders(List.of("Authorization","Content-Type"));
-        // Αν θες να διαβάζεις headers από response:
-        // config.setExposedHeaders(List.of("Authorization"));
         config.setAllowCredentials(true); // μόνο αν όντως στέλνεις cookies/credentials
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

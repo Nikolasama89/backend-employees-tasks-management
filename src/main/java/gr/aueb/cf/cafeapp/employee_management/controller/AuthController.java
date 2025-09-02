@@ -18,6 +18,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * REST controller για αυθεντικοποίηση.
+ *
+ * Endpoint: POST /api/auth/authenticate
+ */
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -25,6 +30,7 @@ public class AuthController {
 
     private final AuthenticationService authenticationService;
 
+    // ΚΑΝΕΙ LOGIN ΚΑΙ ΕΠΙΣΤΤΡΕΦΕΙ JWT
     @PostMapping(
             path = "/authenticate",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -38,6 +44,7 @@ public class AuthController {
     })
     public ResponseEntity<AuthenticationResponseDTO> authenticate(@RequestBody @Valid AuthenticationRequestDTO authenticationRequestDTO)
             throws AppObjectNotAuthorizedException {
+        // ΖΗΤΑΜΕ AUTHENTICATE ΑΠΟ ΤΟ SERVICE. AN ΠΕΤΥΧΕΙ ΠΑΙΡΝΟΥΜΕ ΤΟΚΕΝ ΑΛΛΙΩΣ EXCEPTION/401
         AuthenticationResponseDTO authenticationResponseDTO = authenticationService.authenticate(authenticationRequestDTO);
         return new ResponseEntity<>(authenticationResponseDTO, HttpStatus.OK);
     }
