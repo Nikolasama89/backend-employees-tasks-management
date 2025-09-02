@@ -179,7 +179,7 @@ java -jar target/employee-management-*.jar --spring.profiles.active=test
 
 ## 🖥️ Frontend (Angular)
 
-Το frontend υλοποιείται σε **Angular** και βρίσκεται στο **https://github.com/Nikolasama89/cafe-employee-frontend**. Οι πλήρεις οδηγίες εγκατάστασης/εκτέλεσης (Node/Angular CLI versions, περιβάλλοντα, build) θα βρίσκονται στο **README του frontend**.
+Το frontend υλοποιείται σε **Angular** και βρίσκεται στο **https://github.com/Nikolasama89/cafe-employee-frontend**. Οι πλήρεις οδηγίες εγκατάστασης/εκτέλεσης (Node/Angular CLI versions, περιβάλλοντα, build) βρίσκονται στο **README του frontend**.
 
 **Σύνδεση με backend σε τοπικό dev:**
 
