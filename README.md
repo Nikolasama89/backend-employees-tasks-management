@@ -8,7 +8,7 @@
 
 * **Java 17**
 
-* **Maven** (με Maven Wrapper)
+* **Maven**
 
 * **Spring Boot** (Web, Data JPA, Security)
 
