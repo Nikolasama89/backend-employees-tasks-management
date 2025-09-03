@@ -144,6 +144,12 @@ mvn spring-boot:run
 java -jar target/employee-management-*.jar --spring.profiles.active=test
 ```
 
+## 🔌 Local URLs
+* Backend Base URL: http://localhost:8080/api
+* Swagger UI:       http://localhost:8080/swagger-ui/index.html
+* OpenAPI JSON:     http://localhost:8080/v3/api-docs
+
+
 ## 🧪 Tests
 
 * Υπάρχουν **unit tests στο `EmployeeService` με JUnit** (JUnit 5).
@@ -176,6 +182,8 @@ java -jar target/employee-management-*.jar --spring.profiles.active=test
 * **Swagger UI**: διαθέσιμο στο `/swagger-ui/index.html` (όταν είναι ενεργό).
 * **OpenAPI JSON**: `/v3/api-docs`.
 * Με **JWT**: στο Swagger UI πάτα **Authorize** και βάλε `Bearer <token>` για να καλέσεις secured endpoints.
+
+![Swagger](docs/screenshots/swagger-employee.png)
 
 ## 🖥️ Frontend (Angular)
 
